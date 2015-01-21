@@ -1,7 +1,7 @@
-package de.tu_berlin.math.coga.rndutils;
+package org.zetool.rndutils;
 
-import de.tu_berlin.math.coga.rndutils.generators.GeneralRandom;
-import de.tu_berlin.math.coga.rndutils.generators.MersenneTwister;
+import org.zetool.rndutils.generators.GeneralRandom;
+import org.zetool.rndutils.generators.MersenneTwister;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 
