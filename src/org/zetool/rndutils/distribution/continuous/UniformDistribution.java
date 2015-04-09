@@ -46,6 +46,7 @@ public class UniformDistribution extends ContinousDistribution {
    * value is uniformly distributed in the interval defined by the values {@link #getMin()} and {@link #getMax()}.
    * @return the random value
    */
+  @Override
   public Double getNextRandom() {
 		double randomNumber = RandomUtils.getInstance().getRandomGenerator().nextDouble();
 		return getMin() + (getMax() - getMin()) * randomNumber;
