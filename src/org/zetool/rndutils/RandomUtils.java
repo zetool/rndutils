@@ -164,7 +164,7 @@ public class RandomUtils {
 	 * Sets a new random generator for the first (or only) thread. Do know what
 	 * you do, if you call it. The seeds array will (maybe) no longer represent
 	 * the correct seeds.
-	 * @param r
+	 * @param r the random generator
 	 */
 	public void setRandomGenerator( GeneralRandom r ) {
 		randomGenerator.set( 0, r );

@@ -97,7 +97,7 @@ public class HyperExponentialDistribution extends ContinousDistribution {
 	/**
 	 * Sets the parameter {@code p} that describes the probability of
 	 * choosing exponential distribution 1.
-	 * @param p
+	 * @param p the probability for choosing the first exponential distribution, in [0,1]
 	 * @throws java.lang.IllegalArgumentException if p is smaller than zero or greater than one
 	 */
 	public void setP( double p ) {
@@ -131,10 +131,7 @@ public class HyperExponentialDistribution extends ContinousDistribution {
 	public Double getNextRandom() {
 		while( true ) {
 			double rnd = RandomUtils.getInstance().getRandomGenerator().nextDouble();
-			if( p == 1 || p > rnd )
-				return e1.getNextRandom();
-			else
-				return e2.getNextRandom();
+			return p == 1 || p > rnd ? e1.getNextRandom() : e2.getNextRandom();
 		}
 	}
 }

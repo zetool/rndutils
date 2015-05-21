@@ -10,8 +10,8 @@ public abstract class DiscreteDistribution extends Distribution<Integer> {
 
 	/**
 	 * Creates a new instance of {@code DiscreteDistribution}.
-	 * @param min
-	 * @param max
+	 * @param min the minimal value that can be returned by the distribution
+	 * @param max the maximal value that can be returned by the distribution
 	 */
 	public DiscreteDistribution( int min, int max ) {
 		super( min, max );

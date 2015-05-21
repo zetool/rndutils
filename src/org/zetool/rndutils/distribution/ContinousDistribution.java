@@ -2,7 +2,7 @@
 package org.zetool.rndutils.distribution;
 
 /**
- * The class {@code ContinousDistribution} rperesents a continous
+ * The class {@code ContinousDistribution} represents a continous
  * probability distribution with values in the real numbers.
  * @author Jan-Philipp Kappmeier
  */
@@ -10,8 +10,8 @@ public abstract class ContinousDistribution extends Distribution<Double> {
 
 	/**
 	 * Creates a new instance of {@code ContinousDistribution}.
-	 * @param min
-	 * @param max
+	 * @param min the minimal value that can be taken by the distribution
+	 * @param max the maximal value that can be taken by the distribution
 	 */
 	public ContinousDistribution( double min, double max ) {
 		super( min, max );

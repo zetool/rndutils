@@ -9,11 +9,12 @@ import org.zetool.rndutils.distribution.DiscreteDistribution;
  * @author Jan-Philipp Kappmeier
  */
 public class PoissonDistribution extends DiscreteDistribution {
-	private double lambda = 1;
+	/** */
+  private final double lambda = 1;
 
 	/**
 	 * Creates a new instance of {@code PoissonDistribution}.
-	 * @param lambda 
+	 * @param lambda the parameter describing the expected value
 	 */
 	public PoissonDistribution( double lambda ) {
 		super( 0, Integer.MAX_VALUE );
@@ -21,8 +22,8 @@ public class PoissonDistribution extends DiscreteDistribution {
 
 	/**
 	 *
-	 * @param min
-	 * @param lambda
+	 * @param min the minimal value returned by the distribution
+	 * @param lambda the parameter describing the expected value
 	 */
 	public PoissonDistribution( int min, double lambda ) {
 		super( min, Integer.MAX_VALUE );

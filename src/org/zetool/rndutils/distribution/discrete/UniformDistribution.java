@@ -14,8 +14,8 @@ public class UniformDistribution extends DiscreteDistribution {
 
 	/**
 	 * Creates a new instance of {@code BinomialDistribution}.
-	 * @param min
-	 * @param max
+	 * @param min the minimum value of the uniform distribution
+	 * @param max the maximum value of the uniform distribution
 	 */
 	public UniformDistribution( int min, int max ) {
 		super( min, max );

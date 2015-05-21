@@ -15,8 +15,8 @@ public class BinomialDistribution extends DiscreteDistribution {
 	int n;
 
 	/**
-	 * Creates a new instance of {@code BinomialDistribution}.
-	 * @param n
+	 * Creates a new instance of {@code BinomialDistribution} with default success parameter {@literal p = 0.5}.
+	 * @param n the number of repetitions
 	 */
 	public BinomialDistribution( int n ) {
 		this( 0, n, 0.5 );
@@ -24,8 +24,8 @@ public class BinomialDistribution extends DiscreteDistribution {
 
 	/**
 	 * Creates a new instance of {@code BinomialDistribution}.
-	 * @param n
-	 * @param p
+	 * @param n the number of repetitions
+	 * @param p the success probability
 	 */
 	public BinomialDistribution( int n, double p ) {
 		this( 0, n, p );
@@ -34,8 +34,8 @@ public class BinomialDistribution extends DiscreteDistribution {
 	/**
 	 *
 	 * @param min the minimal binomial value
-	 * @param n the
-	 * @param p
+	 * @param n the number of repettions
+	 * @param p the success probability
 	 */
 	public BinomialDistribution( int min, int n, double p ) {
 		super( min, n + min );
