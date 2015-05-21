@@ -63,7 +63,7 @@ public class BinomialDistribution extends DiscreteDistribution {
 	public double getProbability( int k ) {
 		double a = Math.pow( p, k );
 		double b = Math.pow( q, n-k );
-		long c = Combinatorics.bink( n, k );
+		long c = Combinatorics.bico( n, k );
 		return a * b * c;
 	}
 
