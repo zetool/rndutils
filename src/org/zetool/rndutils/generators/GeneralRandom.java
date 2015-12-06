@@ -1,6 +1,3 @@
-/**
- * GeneralRandom.java
- */
 package org.zetool.rndutils.generators;
 
 /**
