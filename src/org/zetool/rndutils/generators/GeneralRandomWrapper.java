@@ -1,7 +1,6 @@
 package org.zetool.rndutils.generators;
 
 import java.util.Random;
-import org.zetool.rndutils.generators.GeneralRandom;
 
 /**
  * Implements the {@link Random} interface and uses a {@link GeneralRandom} generator to generate the random numbers.
@@ -9,7 +8,7 @@ import org.zetool.rndutils.generators.GeneralRandom;
  * @author Jan-Philipp Kappmeier
  */
 public class GeneralRandomWrapper extends Random {
-    private final GeneralRandom r;
+    private final transient GeneralRandom r;
     private boolean initialized = false;
     private long initialSeed;
 
@@ -63,5 +62,12 @@ public class GeneralRandomWrapper extends Random {
     public double nextDouble() {
         return r.nextDouble();
     }
+
+    @Override
+    protected int next(int bits) {
+        throw new IllegalStateException("next() should not be called");
+    }
+    
+    
 
 }

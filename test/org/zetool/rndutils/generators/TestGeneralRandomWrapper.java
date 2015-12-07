@@ -1,28 +1,117 @@
-
 package org.zetool.rndutils.generators;
 
-import org.zetool.rndutils.generators.GeneralRandomWrapper;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 import org.junit.Test;
-import org.zetool.rndutils.generators.GeneralRandom;
-
 
 /**
  *
  * @author Jan-Philipp Kappmeier
  */
 public class TestGeneralRandomWrapper {
+
     private static class ExpectedAssertionError extends AssertionError {
     }
+
     private static class SeedAssertionError extends AssertionError {
     }
     
-    GeneralRandom mgr = new GeneralRandom() {
-        private boolean called = false;
+    private static final long SEED = 23;
+    private static final byte[] BYTES = new byte[] {2, 4};
+    private static final int INT = 6;
+    private static final int BOUNDED_INT = 7;
+    private static final long LONG = 12345678932L;
+    private static final float FLOAT = 3.123f;
+    private static final double DOUBLE = 0.80;
+    
+    private AtomicLong al = new AtomicLong();
+    private final GeneralRandom MOCK_RANDOM = new GeneralRandom() {
+
+        @Override
+        public double nextDouble() {
+            return DOUBLE;
+        }
+
+        @Override
+        public float nextFloat() {
+            return FLOAT;
+        }
+
+        @Override
+        public boolean nextBoolean() {
+            return true;
+        }
+
+        @Override
+        public long nextLong() {
+            return LONG;
+        }
+
+        @Override
+        public int nextInt(int bound) {
+            return BOUNDED_INT;
+        }
+
+        @Override
+        public int nextInt() {
+            return INT;
+        }
+
+        @Override
+        public void nextBytes(byte[] bytes) {
+            System.arraycopy(BYTES, 0, bytes, 0, BYTES.length);
+        }
+
         @Override
         public void setSeed(long seed) {
-            if(!called) {
+            al.set(seed);
+        }
+
+        @Override
+        public byte nextByte() {
+            throw new UnsupportedOperationException("Unsupported.");
+        }
+
+        @Override
+        public char nextChar() {
+            throw new UnsupportedOperationException("Unsupported.");
+        }
+
+        @Override
+        public short nextShort() {
+            throw new UnsupportedOperationException("Unsupported.");
+        }
+
+        @Override
+        public double nextGaussian() {
+            throw new UnsupportedOperationException("Unsupported.");
+        }
+
+        @Override
+        public String getName() {
+            throw new UnsupportedOperationException("Unsupported.");
+        }
+
+        @Override
+        public String getDesc() {
+            throw new UnsupportedOperationException("Unsupported.");
+        }
+        
+        public long getSeed() {
+            return 1;
+        }
+    };
+    private final GeneralRandom failRandom = new GeneralRandom() {
+        private boolean called = false;
+
+        @Override
+        public void setSeed(long seed) {
+            if (!called) {
                 called = true;
                 return;
             }
@@ -93,67 +182,86 @@ public class TestGeneralRandomWrapper {
         public String getDesc() {
             throw new ExpectedAssertionError();
         }
-            
-            };
-    GeneralRandomWrapper r = new GeneralRandomWrapper(mgr);
+
+    };
+    private final GeneralRandomWrapper failRandomWrapper = new GeneralRandomWrapper(failRandom);
+    private final GeneralRandomWrapper workingRandomWrapper = new GeneralRandomWrapper(MOCK_RANDOM);
 
     @Test(expected = SeedAssertionError.class)
     public void setSeed() {
-        r.setSeed(1);
+        workingRandomWrapper.setSeed(SEED);
+        assertThat(al.get(), is(equalTo(SEED)));
+        failRandomWrapper.setSeed(1);
     }
 
     @Test(expected = ExpectedAssertionError.class)
     public void nextBytes() {
-        byte[] bytes = new byte[]{};
-        r.nextBytes(bytes);
+        byte[] bytes = new byte[BYTES.length];
+        workingRandomWrapper.nextBytes(bytes);
+        assertThat(bytes, is(equalTo(BYTES)));
+        failRandomWrapper.nextBytes(bytes);
     }
 
     @Test(expected = ExpectedAssertionError.class)
     public void nextIntWithBound() {
         int bound = 1;
-        r.nextInt(bound);
+        assertThat(workingRandomWrapper.nextInt(bound), is(equalTo(BOUNDED_INT)));
+        failRandomWrapper.nextInt(bound);
     }
-    
+
     @Test(expected = ExpectedAssertionError.class)
     public void nextInt() {
-        r.nextInt();
+        assertThat(workingRandomWrapper.nextInt(), is(equalTo(INT)));
+        failRandomWrapper.nextInt();
     }
 
     @Test(expected = ExpectedAssertionError.class)
     public void nextLong() {
-        r.nextLong();
+        assertThat(workingRandomWrapper.nextLong(), is(equalTo(LONG)));
+        failRandomWrapper.nextLong();
     }
 
     @Test(expected = ExpectedAssertionError.class)
     public void nextBoolean() {
-        r.nextBoolean();
+        assertThat(workingRandomWrapper.nextBoolean(), is(true));
+        failRandomWrapper.nextBoolean();
     }
 
     @Test(expected = ExpectedAssertionError.class)
     public void nextFloat() {
-        r.nextFloat();
+        assertThat(workingRandomWrapper.nextFloat(), is(equalTo(FLOAT)));
+        failRandomWrapper.nextFloat();
     }
 
     @Test(expected = ExpectedAssertionError.class)
     public void nextDouble() {
-        r.nextDouble();
+        assertThat(workingRandomWrapper.nextDouble(), is(equalTo(DOUBLE)));
+        failRandomWrapper.nextDouble();
     }
 
     @Test(expected = ExpectedAssertionError.class)
     public void nextGaussian() {
-        r.nextGaussian();
+        Random fakeRandom = new Random() {
+            @Override
+            public double nextDouble() {
+                return DOUBLE;
+            }
+        };
+        double expectedGaussian = fakeRandom.nextGaussian();
+        assertThat(workingRandomWrapper.nextGaussian(), is(equalTo(expectedGaussian)));
+        failRandomWrapper.nextGaussian();
     }
 
     @Test(expected = ExpectedAssertionError.class)
     public void ints() {
         long streamSize = 2;
-        
+
         int randomNumberOrigin = 0;
         int randomNumberBound = 1;
-        IntStream is = r.ints();
-        r.ints(streamSize);
-        r.ints(randomNumberOrigin, randomNumberBound);
-        r.ints(streamSize, randomNumberOrigin, randomNumberBound);
+        IntStream is = failRandomWrapper.ints();
+        failRandomWrapper.ints(streamSize);
+        failRandomWrapper.ints(randomNumberOrigin, randomNumberBound);
+        failRandomWrapper.ints(streamSize, randomNumberOrigin, randomNumberBound);
         is.iterator().next();
     }
 
@@ -162,10 +270,10 @@ public class TestGeneralRandomWrapper {
         long streamSize = 0;
         long randomNumberOrigin = 0;
         long randomNumberBound = 1;
-        LongStream ls = r.longs();
-        r.longs(streamSize);
-        r.longs(randomNumberOrigin, randomNumberBound);
-        r.longs(streamSize, randomNumberOrigin, randomNumberBound);
+        LongStream ls = failRandomWrapper.longs();
+        failRandomWrapper.longs(streamSize);
+        failRandomWrapper.longs(randomNumberOrigin, randomNumberBound);
+        failRandomWrapper.longs(streamSize, randomNumberOrigin, randomNumberBound);
         ls.iterator().next();
     }
 
@@ -174,9 +282,9 @@ public class TestGeneralRandomWrapper {
         long streamSize = 0;
         double randomNumberOrigin = 0;
         double randomNumberBound = 1;
-        r.doubles().iterator().next();
-        r.doubles(streamSize);
-        r.doubles(randomNumberOrigin, randomNumberBound);
-        r.doubles(streamSize, randomNumberOrigin, randomNumberBound);
+        failRandomWrapper.doubles().iterator().next();
+        failRandomWrapper.doubles(streamSize);
+        failRandomWrapper.doubles(randomNumberOrigin, randomNumberBound);
+        failRandomWrapper.doubles(streamSize, randomNumberOrigin, randomNumberBound);
     }
 }
