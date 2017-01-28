@@ -211,7 +211,7 @@ public class RandomUtils {
 	 * @return A number between {@code 0} and {@code probabilities.length-1}
 	 */
 	public int chooseRandomlyAbsolute( double[] frequencies ) {
-		int sum = 0;
+		double sum = 0;
 		for( int i = 0; i < frequencies.length; i++ ) {
 			if( frequencies[i] < 0 )
 				throw new IllegalArgumentException( "Negative frequencies are not " +
