@@ -1,4 +1,3 @@
-//package ec.util;
 package org.zetool.rndutils.generators;
 
 import java.io.DataInputStream;
